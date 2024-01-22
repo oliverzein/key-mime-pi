@@ -1,13 +1,7 @@
 #!/usr/bin/env python
 
-import time
-import logging
-import os
-import json
-import flask
-import flask_socketio
-import hid
-import js_to_hid
+import time, logging, os, json, flask, flask_socketio, hid, js_to_hid
+import config
 
 root_logger = logging.getLogger()
 handler = logging.StreamHandler()
@@ -16,12 +10,12 @@ handler.setFormatter(formatter)
 root_logger.addHandler(flask.logging.default_handler)
 root_logger.setLevel(logging.INFO)
 
-config = {
+flaskConfig = {
     "DEBUG": True  # run app in debug modex
 }
 
 app = flask.Flask(__name__, static_url_path='')
-app.config.from_mapping(config)
+app.config.from_mapping(flaskConfig)
 
 socketio = flask_socketio.SocketIO(app, cors_allowed_origins='*')
 
@@ -34,6 +28,7 @@ debug = 'DEBUG' in os.environ
 # Location of HID file handle in which to write keyboard HID input.
 hid_path = os.environ.get('HID_PATH', '/dev/hidg0')
 
+commands = config.loadConfig()
 
 def _parse_key_event(payload):
     return js_to_hid.JavaScriptKeyEvent(meta_modifier=payload['metaKey'],
@@ -100,15 +95,8 @@ def test_disconnect():
 
 @socketio.on('favourites_load')
 def favourites_load():
-    logger.info('favourites_load')
-    favs = ["Cheat SetTimeOfDay 8:00", 
-    "Cheat GCM", 
-	"cheat InfiniteWeight",
-    "cheat gfi WeaponAdminBlinkRifle 1 1 0",
-	"cheat addexperience 6000 0 1",
-    "admincheat Summon CREATURE", 
-    "cheat GMSummon \"CREATURE\" LEVEL"]
-    favs_json = json.dumps(favs)
+    logger.info('favourites_load')    
+    favs_json = json.dumps(commands)
     socketio.emit('favourites_load', favs_json)
     
 
