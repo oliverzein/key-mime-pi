@@ -1,0 +1,114 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  max-width: 95%;
+  margin: 0 auto;
+}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+input
+{
+    font-size:14px;
+}
+
+p {
+  font-family: Lora;
+}
+
+h1, h2, h3, h4 {
+  font-family: Nunito;
+}
+
+h1 {
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-style: italic;
+  font-size: 1.3em;
+}
+
+.status {
+  font-size: 1.2em;
+}
+
+#instructions {
+  margin: 2rem;
+  padding: 1rem;
+  background-color: rgb(213, 213, 223);
+}
+
+#status-connected {
+  display: none;
+  color: green;
+}
+
+#status-disconnected {
+  display: none;
+  color: red;
+}
+
+#disconnect-reason {
+  color: red;
+  visibility: hidden;
+}
+
+#instructions {
+  visibility: hidden;
+}
+
+.keystroke-history, .send {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: rgb(252, 236, 223);
+  border: 1px solid rgb(139, 97, 62);
+  margin: 0.5rem auto;
+  padding: 0.5rem;
+}
+
+#recent-keys {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.key-card {
+  margin: 0.3rem;
+  padding: 0.3rem;
+  display: block;
+  background-color: aliceblue;
+  font-family: 'Courier New', Courier, monospace;
+  border: 1px solid gray;
+}
+
+.key-card[unsaved] {
+	border: 2px dotted red;
+}
+
+.processed-key-card {
+  background-color: rgb(168, 255, 168);
+}
+
+.unsupported-key-card {
+  background-color: red;
+}
+
+.history-form {
+  margin-top: 1rem;
+}
