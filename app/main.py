@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+from flask import Flask
 import time, logging, os, json, flask, flask_socketio, hid, js_to_hid
 import config
 
@@ -9,26 +9,25 @@ formatter = logging.Formatter('%(asctime)s %(name)-15s %(levelname)-4s %(message
 handler.setFormatter(formatter)
 root_logger.addHandler(flask.logging.default_handler)
 root_logger.setLevel(logging.INFO)
-
-flaskConfig = {
-    "DEBUG": True  # run app in debug modex
-}
-
-app = flask.Flask(__name__, static_url_path='')
-app.config.from_mapping(flaskConfig)
-
-socketio = flask_socketio.SocketIO(app, cors_allowed_origins='*')
-
 logger = logging.getLogger(__name__)
-logger.info('Starting app')
+logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
-host = os.environ.get('HOST', '0.0.0.0')
-port = int(os.environ.get('PORT', 8000))
-debug = 'DEBUG' in os.environ
 # Location of HID file handle in which to write keyboard HID input.
 hid_path = os.environ.get('HID_PATH', '/dev/hidg0')
 
+logger.info('Starting app')
+
 commands = config.loadConfig()
+socketio = flask_socketio.SocketIO()
+
+def createApp():
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'secret!'
+    socketio.init_app(app, async_mode=None, logger=False, engineio_logger=False)
+       
+    return app
+
+app = createApp()
 
 def _parse_key_event(payload):
     return js_to_hid.JavaScriptKeyEvent(meta_modifier=payload['metaKey'],
@@ -106,12 +105,12 @@ def index_get():
 
 
 if __name__ == '__main__':
+    host = os.environ.get('HOST', '0.0.0.0')
+    port = int(os.environ.get('PORT', 8000))
+    debug = 'DEBUG' in os.environ
+    
     socketio.run(app,
                  host=host,
                  port=port,
-                 debug=debug,
-                 use_reloader=True,
-                 extra_files=[
-                     './app/templates/index.html', './app/static/js/app.js',
-                     './app/static/css/style.css'
-                 ])
+                 debug=True,
+                 allow_unsafe_werkzeug=True)

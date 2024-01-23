@@ -32,8 +32,10 @@ function onSocketDisconnect(reason) {
 
 function setFavourite(command) {
   const card = $("<div class='key-card'>" + command + "</div>");
-  $('#recent-keys').on("click", runFavourite);
-  $('#recent-keys').append(card);  
+  card.on("click", function() {
+    sendStringAsKeystrokes(command);
+  });
+  $('#recent-keys').append(card);
 }
 
 function proposeFavourite(command) {
@@ -64,11 +66,6 @@ function keepRecentFavourite(timer, element) {
   clearTimeout(timer);
   element.removeAttr("unsaved");
   element.on("click", runFavourite);
-}
-
-function runFavourite() {
-  let x = this.innerText;
-  sendStringAsKeystrokes(x);
 }
 
 socket.emit('favourites_load');
