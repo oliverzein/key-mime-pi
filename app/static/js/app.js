@@ -47,6 +47,7 @@ function proposeFavourite(command) {
 
 function sendStringAsKeystrokes(stringKeys) {
   socket.emit('string', { string: stringKeys, });
+  console.log(stringKeys)
 }
 
 function sendFromInputBox() {
@@ -63,7 +64,8 @@ function removeProposedFavourite(element) {
 function keepRecentFavourite(timer, element) {
   clearTimeout(timer);
   element.removeAttr("unsaved");
-  element.on("click", runFavourite);
+  element.off().on("click", runFavourite);
+  socket.emit('favourite_add', element.html());
 }
 
 function runFavourite() {

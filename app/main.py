@@ -17,7 +17,7 @@ hid_path = os.environ.get('HID_PATH', '/dev/hidg0')
 
 logger.info('Starting app')
 
-commands = config.loadConfig()
+config.loadConfig()
 socketio = flask_socketio.SocketIO()
 
 def createApp():
@@ -55,7 +55,7 @@ def test_string(message):
         logger.info('Char: %s = %d', character, ascval)
         control_keys, hid_keycode = js_to_hid.convert2(ascval)
         logger.info(hid_keycode)
-        hid.send(hid_path, control_keys, hid_keycode)
+        #hid.send(hid_path, control_keys, hid_keycode)
         # if ascval == 34 or ascval == 39:
         #    hid.send(hid_path, 0, 0x2c)
         time.sleep(0.03)
@@ -90,8 +90,13 @@ def test_disconnect():
 @socketio.on('favourites_load')
 def favourites_load():
     logger.info('favourites_load')    
-    favs_json = json.dumps(commands)
-    socketio.emit('favourites_load', favs_json)    
+    favs_json = json.dumps(config.commands)
+    socketio.emit('favourites_load', favs_json)
+
+@socketio.on('favourite_add')
+def favourite_add(command):
+    logger.info('favourite_add: ' + command)
+    config.addCommand(command=command)
 
 @app.route('/', methods=['GET'])
 def index_get():
