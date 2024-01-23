@@ -46,7 +46,6 @@ def _parse_key_event_from_char(char):
                                         key='x',
                                         key_code=char)
 
-
 @socketio.on('string')
 def test_string(message):
     string = message['string']
@@ -60,7 +59,6 @@ def test_string(message):
         # if ascval == 34 or ascval == 39:
         #    hid.send(hid_path, 0, 0x2c)
         time.sleep(0.03)
-
 
 @socketio.on('keystroke')
 def socket_keystroke(message):
@@ -81,28 +79,23 @@ def socket_keystroke(message):
 
     socketio.emit('keystroke-received', {'success': success})
 
-
 @socketio.on('connect')
 def test_connect():
     logger.info('Client connected')
-
 
 @socketio.on('disconnect')
 def test_disconnect():
     logger.info('Client disconnected')
 
-
 @socketio.on('favourites_load')
 def favourites_load():
     logger.info('favourites_load')    
     favs_json = json.dumps(commands)
-    socketio.emit('favourites_load', favs_json)
-    
+    socketio.emit('favourites_load', favs_json)    
 
 @app.route('/', methods=['GET'])
 def index_get():
     return flask.render_template('index.html')
-
 
 if __name__ == '__main__':
     host = os.environ.get('HOST', '0.0.0.0')
