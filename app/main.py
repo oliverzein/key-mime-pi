@@ -8,9 +8,9 @@ handler = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s %(name)-15s %(levelname)-4s %(message)s', '%Y-%m-%d %H:%M:%S')
 handler.setFormatter(formatter)
 root_logger.addHandler(flask.logging.default_handler)
-root_logger.setLevel(logging.INFO)
+root_logger.setLevel(logging.DEBUG)
 logger = logging.getLogger(__name__)
-logging.getLogger('werkzeug').setLevel(logging.ERROR)
+logging.getLogger('werkzeug').setLevel(logging.INFO)
 
 # Location of HID file handle in which to write keyboard HID input.
 hid_path = os.environ.get('HID_PATH', '/dev/hidg0')
@@ -55,7 +55,7 @@ def test_string(message):
         logger.info('Char: %s = %d', character, ascval)
         control_keys, hid_keycode = js_to_hid.convert2(ascval)
         logger.info(hid_keycode)
-        #hid.send(hid_path, control_keys, hid_keycode)
+        hid.send(hid_path, control_keys, hid_keycode)
         # if ascval == 34 or ascval == 39:
         #    hid.send(hid_path, 0, 0x2c)
         time.sleep(0.03)
@@ -97,6 +97,11 @@ def favourites_load():
 def favourite_add(command):
     logger.info('favourite_add: ' + command)
     config.addCommand(command=command)
+    
+@socketio.on('favourite_remove')
+def favourite_remove(command):
+    logger.info('favourite_remove: ' + command)
+    config.removeCommand(command=command)    
 
 @app.route('/', methods=['GET'])
 def index_get():

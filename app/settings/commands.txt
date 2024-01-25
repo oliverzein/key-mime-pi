@@ -1,1 +1,1 @@
-["EnableCheats joe2cool", "Cheat SetTimeOfDay 8:00", "cheat GCM", "cheat InfiniteWeight", "cheat addexperience 6000 0 1", "abc"]
+["EnableCheats joe2cool", "Cheat SetTimeOfDay 8:00", "cheat GCM", "cheat InfiniteWeight", "cheat addexperience 6000 0 1"]

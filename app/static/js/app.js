@@ -3,6 +3,7 @@
 const socket = io();
 let connected = false;
 let keystrokeId = 0;
+let drake = null;
 
 $("#send-button").on("click", sendFromInputBox);
 $("#domTextElement").on("keypress", function (e) {
@@ -18,6 +19,20 @@ socket.on('favourites_load', function (msg) {
   for (let i in favArray) {
     setFavourite(favArray[i]);
   }
+  
+  drake = dragula([document.querySelector('#recent-keys'), document.querySelector('#remove')]);
+  drake.on("drop", function(el, target) {
+    if($(target).attr("id") === "remove") {
+      drake.remove();
+      socket.emit('favourite_remove', $(el).html());
+    }
+  });
+  drake.on("drag", function(el) {
+    $("#remove").show();
+  });
+  drake.on("dragend", function(el) {
+    $("#remove").hide();
+  });
 });
 
 function onSocketConnect() {

@@ -4,25 +4,26 @@
     <meta charset="utf-8" />
     <title>Key Mime Pi</title>
     <link rel="stylesheet" type="text/css" href="static/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="static/css/dragula.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Lora&family=Nunito&display=swap" rel="stylesheet" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
-    
   </head>
-  <body>
+  <body class="lock-screen">
     <div class="container">
       <h1>Key Mime Pi</h1>
       <div>
         <p id="status" class="status">???</p>
       </div>
       <div class="container keystroke-history">
-        <h2>Commands</h2>
         <div id="recent-keys"></div>
         <label for="domTextElement">Text to send:</label>
         <input type="text" id="domTextElement" />
-        <button class="button" id="send-button">Send the String</button>
+        <button class="button" id="send-button">Send the String</button>        
+        <div hidden id="remove">Remove Favourite</div>
       </div>
     </div>
+    <script src="static/js/dragula.js"></script>
     <script src="static/js/app.js"></script>
   </body>
 </html>

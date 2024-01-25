@@ -18,3 +18,7 @@ def saveComamnds():
 def addCommand(command):
     commands.append(command)
     saveComamnds()
+    
+def removeCommand(command):
+    commands.remove(command)
+    saveComamnds()
