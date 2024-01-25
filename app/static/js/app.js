@@ -14,26 +14,6 @@ $("#domTextElement").on("keypress", function (e) {
 
 socket.on('connect', onSocketConnect);
 socket.on('disconnect', onSocketDisconnect);
-socket.on('favourites_load', function (msg) {
-  var favArray = JSON.parse(msg);
-  for (let i in favArray) {
-    setFavourite(favArray[i]);
-  }
-  
-  drake = dragula([document.querySelector('#recent-keys'), document.querySelector('#remove')]);
-  drake.on("drop", function(el, target) {
-    if($(target).attr("id") === "remove") {
-      drake.remove();
-      socket.emit('favourite_remove', $(el).html());
-    }
-  });
-  drake.on("drag", function(el) {
-    $("#remove").show();
-  });
-  drake.on("dragend", function(el) {
-    $("#remove").hide();
-  });
-});
 
 function onSocketConnect() {
   connected = true;
@@ -55,9 +35,7 @@ function proposeFavourite(command) {
   const card = $("<div class='key-card' unsaved=true>" + command + "</div>");
   $('#recent-keys').append(card);
   const removalTimer = setTimeout(removeProposedFavourite.bind(null, card), 3000);
-  card.on("click", function() {
-    keepRecentFavourite(removalTimer, card);
-  });
+  card.on("click", () => keepRecentFavourite(removalTimer, card));
 }
 
 function sendStringAsKeystrokes(stringKeys) {
@@ -87,4 +65,22 @@ function runFavourite() {
   sendStringAsKeystrokes($(this).html());
 }
 
-socket.emit('favourites_load');
+function displayFavs(favs) {
+  var favArray = JSON.parse(favs);
+  for (let i in favArray) {
+    setFavourite(favArray[i]);
+  }
+  
+  // setup drag & drop 
+  drake = dragula([document.querySelector('#recent-keys'), document.querySelector('#remove')]);
+  drake.on("drag", () => $("#remove").show());
+  drake.on("dragend", () => $("#remove").hide());
+  drake.on("drop", function(el, target) {
+    if($(target).attr("id") === "remove") {
+      drake.remove();
+      socket.emit('favourite_remove', $(el).html());
+    }
+  });  
+};
+
+socket.emit('favourites_load', (response) => displayFavs(response));

@@ -91,7 +91,8 @@ def test_disconnect():
 def favourites_load():
     logger.info('favourites_load')    
     favs_json = json.dumps(config.commands)
-    socketio.emit('favourites_load', favs_json)
+    #socketio.emit('favourites_load', favs_json)
+    return favs_json
 
 @socketio.on('favourite_add')
 def favourite_add(command):
