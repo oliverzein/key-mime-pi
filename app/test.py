@@ -1,6 +1,8 @@
-import config
+import struct
 
-commands = config.loadConfig()
+def int_to_byte(n: int) -> bytes:
+    return struct.pack('<B', n & 0xff)
 
-for c in commands:
-    print(c)
+input_array = [0, 0, -5, 5, 0]
+
+print(b''.join([*map(int_to_byte, input_array)]))
