@@ -1,7 +1,7 @@
 from zero_hid import Keyboard, Mouse
 
-k = Keyboard()
-k.set_layout(language='DE_ASCII')
+#k = Keyboard()
+#k.set_layout(language='DE_ASCII')
 #k.type("Hello world! zzz #+\\")
 
 """ with Mouse() as m:

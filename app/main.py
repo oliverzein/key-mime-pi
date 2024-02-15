@@ -2,6 +2,7 @@
 from flask import Flask
 import time, logging, os, json, flask, flask_socketio, hid, js_to_hid
 import config
+from zero_hid import Keyboard
 
 root_logger = logging.getLogger()
 handler = logging.StreamHandler()
@@ -50,7 +51,11 @@ def _parse_key_event_from_char(char):
 def test_string(message):
     string = message['string']
     logger.info('Send String: %s', string)
-    for character in string:
+    k = Keyboard()
+    k.set_layout(language='DE_ASCII')
+    k.type(string)
+    
+    """ for character in string:
         ascval = ord(character)
         logger.info('Char: %s = %d', character, ascval)
         control_keys, hid_keycode = js_to_hid.convert2(ascval)
@@ -58,7 +63,7 @@ def test_string(message):
         hid.send(hid_path, control_keys, hid_keycode)
         # if ascval == 34 or ascval == 39:
         #    hid.send(hid_path, 0, 0x2c)
-        time.sleep(0.03)
+        time.sleep(0.03) """
 
 @socketio.on('keystroke')
 def socket_keystroke(message):
