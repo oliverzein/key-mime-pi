@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from flask import Flask
-import time, logging, os, json, flask, flask_socketio, hid, js_to_hid
-import config
+import logging, os, json, flask, flask_socketio, config
 from zero_hid import Keyboard
 
 root_logger = logging.getLogger()
@@ -30,23 +29,6 @@ def createApp():
 
 app = createApp()
 
-def _parse_key_event(payload):
-    return js_to_hid.JavaScriptKeyEvent(meta_modifier=payload['metaKey'],
-                                        alt_modifier=payload['altKey'],
-                                        shift_modifier=payload['shiftKey'],
-                                        ctrl_modifier=payload['ctrlKey'],
-                                        key=payload['key'],
-                                        key_code=payload['keyCode'])
-
-
-def _parse_key_event_from_char(char):
-    return js_to_hid.JavaScriptKeyEvent(meta_modifier=False,
-                                        alt_modifier=False,
-                                        shift_modifier=False,
-                                        ctrl_modifier=False,
-                                        key='x',
-                                        key_code=char)
-
 @socketio.on('string')
 def test_string(message):
     string = message['string']
@@ -54,35 +36,6 @@ def test_string(message):
     k = Keyboard()
     k.set_layout(language='DE_ASCII')
     k.type(string)
-    
-    """ for character in string:
-        ascval = ord(character)
-        logger.info('Char: %s = %d', character, ascval)
-        control_keys, hid_keycode = js_to_hid.convert2(ascval)
-        logger.info(hid_keycode)
-        hid.send(hid_path, control_keys, hid_keycode)
-        # if ascval == 34 or ascval == 39:
-        #    hid.send(hid_path, 0, 0x2c)
-        time.sleep(0.03) """
-
-@socketio.on('keystroke')
-def socket_keystroke(message):
-    key_event = _parse_key_event(message)
-    hid_keycode = None
-    success = False
-    try:
-        control_keys, hid_keycode = js_to_hid.convert(key_event)
-    except js_to_hid.UnrecognizedKeyCodeError:
-        logger.warning('Unrecognized key: %s (keycode=%d)', key_event.key,
-                       key_event.key_code)
-    if hid_keycode is None:
-        logger.info('Ignoring %s key (keycode=%d)', key_event.key,
-                    key_event.key_code)
-    else:
-        hid.send(hid_path, control_keys, hid_keycode)
-        success = True
-
-    socketio.emit('keystroke-received', {'success': success})
 
 @socketio.on('connect')
 def test_connect():
