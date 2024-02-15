@@ -11,6 +11,7 @@ root_logger.addHandler(flask.logging.default_handler)
 root_logger.setLevel(logging.DEBUG)
 logger = logging.getLogger(__name__)
 logging.getLogger('werkzeug').setLevel(logging.INFO)
+logging.getLogger('zero_hid').setLevel(logging.INFO)
 
 # Location of HID file handle in which to write keyboard HID input.
 hid_path = os.environ.get('HID_PATH', '/dev/hidg0')
