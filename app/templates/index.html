@@ -11,9 +11,19 @@
   </head>
   <body class="lock-screen">
     <div class="container">
-      <h1>Key Mime Pi</h1>
-      <div>
-        <p id="status" class="status">???</p>
+      <div style="
+          align-items: center;
+          display: flex;
+          justify-content: space-between;
+          margin: 0 auto;
+          width: 500px;" class="flex-container">          
+        <div class="">
+          <input type="checkbox" id="moverActive"  onchange="toggleMoverActive()"
+            name="moverActive" value="active" {{'checked="checked"' if moverActive else ""}}>
+          <label style="font-size: 1.2em;" for="moverActive">Mover</label><br>
+        </div>
+        <h1>Key Mime Pi</h1>
+        <div style="font-family: Lora;" id="status" class="status">???</div>
       </div>
       <div class="container keystroke-history">
         <div id="recent-keys"></div>

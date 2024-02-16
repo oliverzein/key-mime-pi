@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from flask import Flask
-import logging, os, json, flask, flask_socketio, config
-from zero_hid import Keyboard
+import logging, os, json, flask, flask_socketio, config, time
+from zero_hid import Keyboard, Mouse
 
 root_logger = logging.getLogger()
 handler = logging.StreamHandler()
@@ -20,6 +20,7 @@ logger.info('Starting app')
 
 config.loadConfig()
 socketio = flask_socketio.SocketIO()
+moverActive = False
 
 def createApp():
     app = Flask(__name__)
@@ -46,6 +47,16 @@ def test_connect():
 def test_disconnect():
     logger.info('Client disconnected')
 
+@socketio.on('mover')
+def mover():
+    global moverActive
+    logger.info('mover')
+    moverActive = not moverActive
+    if moverActive:
+        socketio.start_background_task(mover_thread())
+        
+    return moverActive
+
 @socketio.on('favourites_load')
 def favourites_load():
     logger.info('favourites_load')    
@@ -65,7 +76,23 @@ def favourite_remove(command):
 
 @app.route('/', methods=['GET'])
 def index_get():
-    return flask.render_template('index.html')
+    return flask.render_template('index.html', moverActive=moverActive)
+
+def mover_thread():
+    global moverActive
+    print(" Mover Thread started")
+    while moverActive:
+        print("Moving ...")
+        try:
+            with Mouse() as m:
+                m.move(5,0)
+                m.move(0,-5)
+                m.move(-5,0)
+                m.move(0,5)
+        except:
+            pass
+        time.sleep(60)
+    print(" Mover Thread stopped")
 
 if __name__ == '__main__':
     host = os.environ.get('HOST', '0.0.0.0')

@@ -25,6 +25,12 @@ function onSocketDisconnect(reason) {
   $("#status").html('Error: ' + reason);
 }
 
+function toggleMoverActive() {
+  socket.emit('mover', (state) => {
+    //alert(state)
+  });
+}
+
 function setFavourite(command) {
   const card = $("<div class='key-card'>" + command + "</div>");
   card.on("click", runFavourite);
