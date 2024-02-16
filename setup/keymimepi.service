@@ -1,0 +1,10 @@
+[Unit]
+Description=Key-MIME-Pi Service
+
+[Service]
+User=oliverzein
+WorkingDirectory=/home/oliverzein/key-mime-pi
+ExecStart=/home/oliverzein/key-mime-pi/.venv/bin/python3 app/main.py
+
+[Install]
+WantedBy=multi-user.target
