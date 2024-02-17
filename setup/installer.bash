@@ -28,10 +28,17 @@ install() {
     cp init_usb_gadget /usr/bin/ # USB gadget configFS
     chmod 755 /usr/bin/init_usb_gadget
     #sed -i '/^exit 0/i /usr/bin/init_usb_gadget' /etc/rc.local # libcomposite configuration
+    
     cp zerohid.service /lib/systemd/system/zerohid.service
     chmod 644 /lib/systemd/system/zerohid.service
     systemctl daemon-reload
     systemctl enable zerohid.service
+
+    cp keymimepi.service /lib/systemd/system/keymimepi.service
+    chmod 644 /lib/systemd/system/keymimepi.service
+    systemctl daemon-reload
+    systemctl enable keymimepi.service
+
     /usr/bin/init_usb_gadget 2>/dev/null
 }
 
