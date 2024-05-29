@@ -25,8 +25,7 @@ moverActive = False
 def createApp():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'secret!'
-    socketio.init_app(app, async_mode=None, logger=False, engineio_logger=False)
-       
+    socketio.init_app(app, async_mode=None, logger=False, engineio_logger=False)       
     return app
 
 app = createApp()
@@ -78,6 +77,10 @@ def favourite_remove(command):
 def index_get():
     return flask.render_template('index.html', moverActive=moverActive)
 
+@app.route('/v2', methods=['GET'])
+def indexv2_get():
+    return flask.render_template('indexv2.html', moverActive=moverActive)
+
 def mover_thread():
     global moverActive
     print(" Mover Thread started")
@@ -94,13 +97,27 @@ def mover_thread():
         time.sleep(60)
     print(" Mover Thread stopped")
 
+def startMouseMover():        
+    logger.info('startMouseMover')
+    global moverActive   
+    if moverActive:
+        logger.info("Mouse Mover already active.")
+    else:
+        logger.info("Starting Mouse Mover.")
+        socketio.start_background_task(mover_thread())
+        moverActive = True
+
 if __name__ == '__main__':
     host = os.environ.get('HOST', '0.0.0.0')
     port = int(os.environ.get('PORT', 8000))
     debug = 'DEBUG' in os.environ
     
+    loadMoverOnStartup = True
+    if loadMoverOnStartup:
+        startMouseMover()
+
     socketio.run(app,
                  host=host,
                  port=port,
                  debug=True,
-                 allow_unsafe_werkzeug=True)
+                 allow_unsafe_werkzeug=True)    
