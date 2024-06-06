@@ -104,8 +104,8 @@ def startMouseMover():
         logger.info("Mouse Mover already active.")
     else:
         logger.info("Starting Mouse Mover.")
-        socketio.start_background_task(mover_thread())
         moverActive = True
+        socketio.start_background_task(mover_thread())        
 
 if __name__ == '__main__':
     host = os.environ.get('HOST', '0.0.0.0')
