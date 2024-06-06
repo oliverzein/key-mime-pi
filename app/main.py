@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from flask import Flask
-import logging, os, json, flask, flask_socketio, config, time
+import logging, os, json, flask, flask_socketio, config, time, threading
 from zero_hid import Keyboard, Mouse
 
 root_logger = logging.getLogger()
@@ -105,7 +105,9 @@ def startMouseMover():
     else:
         logger.info("Starting Mouse Mover.")
         moverActive = True
-        socketio.start_background_task(mover_thread())        
+        #socketio.start_background_task(mover_thread())
+        mover = threading.Thread(target=mover_thread)
+        mover.start()
 
 if __name__ == '__main__':
     host = os.environ.get('HOST', '0.0.0.0')
